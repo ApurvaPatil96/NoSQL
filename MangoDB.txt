@@ -1,0 +1,639 @@
+test> show dbs
+admin   40.00 KiB
+clgdbs  16.00 KiB
+config  60.00 KiB
+local   72.00 KiB
+test> use clgdbs
+switched to db clgdbs
+clgdbs> show collections
+stdinfo
+teacherinfo
+clgdbs> db.createCollection('courseinfo')
+{ ok: 1 }
+clgdbs> db.stdinfo.insertOne({name:"Priya",age:17,gpa:9.6})
+{
+  acknowledged: true,
+  insertedId: ObjectId('6994321db1ebfba8d94d7942')
+}
+clgdbs> db.stdinfo.insertMany
+
+clgdbs> db.stdinfo.insertMany([{name:"Sakshi",age:19,gpa:8.9},{name:"sharayu",age:20,gpa:9.0}])
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('69943441b1ebfba8d94d7943'),
+    '1': ObjectId('69943441b1ebfba8d94d7944')
+  }
+}
+clgdbs> show collections
+courseinfo
+stdinfo
+teacherinfo
+clgdbs> db.teacherinfo
+clgdbs.teacherinfo
+
+clgdbs> db.teacherinfo.insertOne({name:"Najima",age:28,subject:"Python",exp:3})
+{
+  acknowledged: true,
+  insertedId: ObjectId('69943850b1ebfba8d94d7945')
+}
+clgdbs> db.teacherinfo.insertMany([{name:"Snehal",age:33,subject:"DBMS",exp:6},{name:"Pallavi",age:30,subject:"PLab",exp:5}])
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('6994390eb1ebfba8d94d7946'),
+    '1': ObjectId('6994390eb1ebfba8d94d7947')
+  }
+}
+clgdbs> db.stdinfo.find()
+[
+  {
+    _id: ObjectId('6994321db1ebfba8d94d7942'),
+    name: 'Priya',
+    age: 17,
+    gpa: 9.6
+  },
+  {
+    _id: ObjectId('69943441b1ebfba8d94d7943'),
+    name: 'Sakshi',
+    age: 19,
+    gpa: 8.9
+  },
+  {
+    _id: ObjectId('69943441b1ebfba8d94d7944'),
+    name: 'sharayu',
+    age: 20,
+    gpa: 9
+  }
+]
+clgdbs> db.stdinfo.find().sort({age:1})
+[
+  {
+    _id: ObjectId('6994321db1ebfba8d94d7942'),
+    name: 'Priya',
+    age: 17,
+    gpa: 9.6
+  },
+  {
+    _id: ObjectId('69943441b1ebfba8d94d7943'),
+    name: 'Sakshi',
+    age: 19,
+    gpa: 8.9
+  },
+  {
+    _id: ObjectId('69943441b1ebfba8d94d7944'),
+    name: 'sharayu',
+    age: 20,
+    gpa: 9
+  }
+]
+clgdbs> db.stdinfo.find().sort({age:-1})
+[
+  {
+    _id: ObjectId('69943441b1ebfba8d94d7944'),
+    name: 'sharayu',
+    age: 20,
+    gpa: 9
+  },
+  {
+    _id: ObjectId('69943441b1ebfba8d94d7943'),
+    name: 'Sakshi',
+    age: 19,
+    gpa: 8.9
+  },
+  {
+    _id: ObjectId('6994321db1ebfba8d94d7942'),
+    name: 'Priya',
+    age: 17,
+    gpa: 9.6
+  }
+]
+clgdbs> db.stdinfo.find({age:20})
+[
+  {
+    _id: ObjectId('69943441b1ebfba8d94d7944'),
+    name: 'sharayu',
+    age: 20,
+    gpa: 9
+  }
+]
+clgdbs> db.stdinfo.find({age:20},{name:true},{_id:false})
+[ { _id: ObjectId('69943441b1ebfba8d94d7944'), name: 'sharayu' } ]
+clgdbs> db.stdinfo.find({age:20},{name:true,_id:false})
+[ { name: 'sharayu' } ]
+clgdbs> db.stdinfo.updateOne({name:"Priya"},{$set:{age:21,gpa:8.5}})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+clgdbs> db.stdinfo.find()
+[
+  {
+    _id: ObjectId('6994321db1ebfba8d94d7942'),
+    name: 'Priya',
+    age: 21,
+    gpa: 8.5
+  },
+  {
+    _id: ObjectId('69943441b1ebfba8d94d7943'),
+    name: 'Sakshi',
+    age: 19,
+    gpa: 8.9
+  },
+  {
+    _id: ObjectId('69943441b1ebfba8d94d7944'),
+    name: 'sharayu',
+    age: 20,
+    gpa: 9
+  }
+]
+clgdbs> db.teacherinfo.updateOne({name:"Palavi"},{$set:{exp:10}})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 0,
+  modifiedCount: 0,
+  upsertedCount: 0
+}
+clgdbs> db.teacherinfo.find()
+[
+  {
+    _id: ObjectId('69943850b1ebfba8d94d7945'),
+    name: 'Najima',
+    age: 28,
+    subject: 'Python',
+    exp: 3
+  },
+  {
+    _id: ObjectId('6994390eb1ebfba8d94d7946'),
+    name: 'Snehal',
+    age: 33,
+    subject: 'DBMS',
+    exp: 6
+  },
+  {
+    _id: ObjectId('6994390eb1ebfba8d94d7947'),
+    name: 'Pallavi',
+    age: 30,
+    subject: 'PLab',
+    exp: 5
+  }
+]
+clgdbs> db.teacherinfo.updateOne({name:"Pallavi"},{$set:{exp:10}})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+clgdbs> db.teacherinfo.find()
+[
+  {
+    _id: ObjectId('69943850b1ebfba8d94d7945'),
+    name: 'Najima',
+    age: 28,
+    subject: 'Python',
+    exp: 3
+  },
+  {
+    _id: ObjectId('6994390eb1ebfba8d94d7946'),
+    name: 'Snehal',
+    age: 33,
+    subject: 'DBMS',
+    exp: 6
+  },
+  {
+    _id: ObjectId('6994390eb1ebfba8d94d7947'),
+    name: 'Pallavi',
+    age: 30,
+    subject: 'PLab',
+    exp: 10
+  }
+]
+
+test> use clgdbs
+switched to db clgdbs
+clgdbs> show collections
+courseinfo
+stdinfo
+teacherinfo
+
+clgdbs> db.stdinfo.find({name:"Ritvika",age:19})
+
+clgdbs> db.stdinfo.find()
+[
+  {
+    _id: ObjectId('6994321db1ebfba8d94d7942'),
+    name: 'Priya',
+    age: 21,
+    gpa: 8.5
+  },
+  {
+    _id: ObjectId('69943441b1ebfba8d94d7943'),
+    name: 'Sakshi',
+    age: 19,
+    gpa: 8.9
+  },
+  {
+    _id: ObjectId('69943441b1ebfba8d94d7944'),
+    name: 'sharayu',
+    age: 20,
+    gpa: 9
+  }
+]
+clgdbs> db.stdinfo.find({name:"Priya",age:21})
+[
+  {
+    _id: ObjectId('6994321db1ebfba8d94d7942'),
+    name: 'Priya',
+    age: 21,
+    gpa: 8.5
+  }
+]
+
+
+clgdbs> db.stdinfo.find({name:{$eq:"sharayu"}})
+[
+  {
+    _id: ObjectId('69943441b1ebfba8d94d7944'),
+    name: 'sharayu',
+    age: 20,
+    gpa: 9
+  }
+]
+clgdbs> db.stdinfo.find({name:{$ne:"sharayu"}})
+[
+  {
+    _id: ObjectId('6994321db1ebfba8d94d7942'),
+    name: 'Priya',
+    age: 21,
+    gpa: 8.5
+  },
+  {
+    _id: ObjectId('69943441b1ebfba8d94d7943'),
+    name: 'Sakshi',
+    age: 19,
+    gpa: 8.9
+  }
+]
+clgdbs> db.stdinfo.find({age:{$lt:20}})
+[
+  {
+    _id: ObjectId('69943441b1ebfba8d94d7943'),
+    name: 'Sakshi',
+    age: 19,
+    gpa: 8.9
+  }
+]
+clgdbs> db.stdinfo.find({age:{$gt:20}})
+[
+  {
+    _id: ObjectId('6994321db1ebfba8d94d7942'),
+    name: 'Priya',
+    age: 21,
+    gpa: 8.5
+  }
+]
+clgdbs> db.stdinfo.find({age:{$gte:20}})
+[
+  {
+    _id: ObjectId('6994321db1ebfba8d94d7942'),
+    name: 'Priya',
+    age: 21,
+    gpa: 8.5
+  },
+  {
+    _id: ObjectId('69943441b1ebfba8d94d7944'),
+    name: 'sharayu',
+    age: 20,
+    gpa: 9
+  }
+]
+clgdbs> db.stdinfo.find({age:{$lte:20}})
+[
+  {
+    _id: ObjectId('69943441b1ebfba8d94d7943'),
+    name: 'Sakshi',
+    age: 19,
+    gpa: 8.9
+  },
+  {
+    _id: ObjectId('69943441b1ebfba8d94d7944'),
+    name: 'sharayu',
+    age: 20,
+    gpa: 9
+  }
+]
+clgdbs> db.stdinfo.find({age:{$lte:20,$gte:18}},{name:true,age:true,_id:false})
+[ { name: 'Sakshi', age: 19 }, { name: 'sharayu', age: 20 } ]
+clgdbs> db.stdinfo.find({age:{$in:[18,19,20]}})
+[
+  {
+    _id: ObjectId('69943441b1ebfba8d94d7943'),
+    name: 'Sakshi',
+    age: 19,
+    gpa: 8.9
+  },
+  {
+    _id: ObjectId('69943441b1ebfba8d94d7944'),
+    name: 'sharayu',
+    age: 20,
+    gpa: 9
+  }
+]
+clgdbs> db.stdinfo.find({age:{$in:[18,19,20]}},{name:true,_id:false})
+[ { name: 'Sakshi' }, { name: 'sharayu' } ]
+clgdbs> db.stdinfo.find({age:{$nin:[18,19,20]}},{name:true,_id:false})
+[ { name: 'Priya' } ]
+clgdbs> db.stdinfo.find({$and:[{age:{$gt:20}},{gpa:{$gt:8.5}}]})
+
+clgdbs> db.stdinfo.find({$and:[{age:{$gt:18}},{gpa:{$gt:8.5}}]})
+[
+  {
+    _id: ObjectId('69943441b1ebfba8d94d7943'),
+    name: 'Sakshi',
+    age: 19,
+    gpa: 8.9
+  },
+  {
+    _id: ObjectId('69943441b1ebfba8d94d7944'),
+    name: 'sharayu',
+    age: 20,
+    gpa: 9
+  }
+]
+clgdbs> db.stdinfo.find({$and:[{age:{$gt:18}},{gpa:{$gt:8.5}}]},{name:true,age:true,_id:false})
+[ { name: 'Sakshi', age: 19 }, { name: 'sharayu', age: 20 } ]
+clgdbs> db.stdinfo.find({$and:[{age:{$gt:18}},{gpa:{$gt:8.5}}]},{name:true,age:true,_id:false,gpa:true})
+[
+  { name: 'Sakshi', age: 19, gpa: 8.9 },
+  { name: 'sharayu', age: 20, gpa: 9 }
+]
+
+
+clgdbs> db.teacherinfo.find({and:[{$age:{$lt:20}},{exp:{$lt:5}}]})
+
+clgdbs> db.teacherinfo.find()
+[
+  {
+    _id: ObjectId('69943850b1ebfba8d94d7945'),
+    name: 'Najima',
+    age: 28,
+    subject: 'Python',
+    exp: 3
+  },
+  {
+    _id: ObjectId('6994390eb1ebfba8d94d7946'),
+    name: 'Snehal',
+    age: 33,
+    subject: 'DBMS',
+    exp: 6
+  },
+  {
+    _id: ObjectId('6994390eb1ebfba8d94d7947'),
+    name: 'Pallavi',
+    age: 30,
+    subject: 'PLab',
+    exp: 10
+  }
+]
+
+
+
+clgdbs> db.teacherinfo.find({$nor:[{age:{$gt:30}},{exp:{$gt:5}}]})
+[
+  {
+    _id: ObjectId('69943850b1ebfba8d94d7945'),
+    name: 'Najima',
+    age: 28,
+    subject: 'Python',
+    exp: 3
+  }
+]
+
+clgdbs> db.teacherinfo.deleteMany({and:[{$age:{$lt:30}},{exp:{$lt:5}}]})
+{ acknowledged: true, deletedCount: 0 }
+clgdbs> db.teacherinfo.find()
+[
+  {
+    _id: ObjectId('69943850b1ebfba8d94d7945'),
+    name: 'Najima',
+    age: 28,
+    subject: 'Python',
+    exp: 3
+  },
+  {
+    _id: ObjectId('6994390eb1ebfba8d94d7946'),
+    name: 'Snehal',
+    age: 33,
+    subject: 'DBMS',
+    exp: 6
+  },
+  {
+    _id: ObjectId('6994390eb1ebfba8d94d7947'),
+    name: 'Pallavi',
+    age: 30,
+    subject: 'PLab',
+    exp: 10
+  }
+]
+clgdbs> db.teacherinfo.deleteMany({$and:[{age:{$lt:30}},{exp:{$lt:5}}]})
+{ acknowledged: true, deletedCount: 1 }
+clgdbs> db.teacherinfo.find()
+[
+  {
+    _id: ObjectId('6994390eb1ebfba8d94d7946'),
+    name: 'Snehal',
+    age: 33,
+    subject: 'DBMS',
+    exp: 6
+  },
+  {
+    _id: ObjectId('6994390eb1ebfba8d94d7947'),
+    name: 'Pallavi',
+    age: 30,
+    subject: 'PLab',
+    exp: 10
+  }
+]
+clgdbs> db.teacherinfo.find({name:"Snehal"}).explain('executionStats')
+{
+  explainVersion: '1',
+  queryPlanner: {
+    namespace: 'clgdbs.teacherinfo',
+    parsedQuery: { name: { '$eq': 'Snehal' } },
+    indexFilterSet: false,
+    planCacheShapeHash: '544F3E5C',
+    planCacheKey: 'B9363AF4',
+    optimizationTimeMillis: 0,
+    maxIndexedOrSolutionsReached: false,
+    maxIndexedAndSolutionsReached: false,
+    maxScansToExplodeReached: false,
+    prunedSimilarIndexes: false,
+    winningPlan: {
+      isCached: false,
+      stage: 'COLLSCAN',
+      filter: { name: { '$eq': 'Snehal' } },
+      direction: 'forward'
+    },
+    rejectedPlans: []
+  },
+  executionStats: {
+    executionSuccess: true,
+    nReturned: 1,
+    executionTimeMillis: 30,
+    totalKeysExamined: 0,
+    totalDocsExamined: 2,
+    executionStages: {
+      isCached: false,
+      stage: 'COLLSCAN',
+      filter: { name: { '$eq': 'Snehal' } },
+      nReturned: 1,
+      executionTimeMillisEstimate: 0,
+      works: 3,
+      advanced: 1,
+      needTime: 1,
+      needYield: 0,
+      saveState: 1,
+      restoreState: 1,
+      isEOF: 1,
+      direction: 'forward',
+      docsExamined: 2
+    }
+  },
+  queryShapeHash: '2EFD0D11BCF1E186FEC3A98866F0654E1422875729CCE54F7D693C5AEBC29E68',
+  command: { find: 'teacherinfo', filter: { name: 'Snehal' }, '$db': 'clgdbs' },
+  serverInfo: {
+    host: 'DESKTOP-C06E7JV',
+    port: 27017,
+    version: '8.0.4',
+    gitVersion: 'bc35ab4305d9920d9d0491c1c9ef9b72383d31f9'
+  },
+  serverParameters: {
+    internalQueryFacetBufferSizeBytes: 104857600,
+    internalQueryFacetMaxOutputDocSizeBytes: 104857600,
+    internalLookupStageIntermediateDocumentMaxSizeBytes: 104857600,
+    internalDocumentSourceGroupMaxMemoryBytes: 104857600,
+    internalQueryMaxBlockingSortMemoryUsageBytes: 104857600,
+    internalQueryProhibitBlockingMergeOnMongoS: 0,
+    internalQueryMaxAddToSetBytes: 104857600,
+    internalDocumentSourceSetWindowFieldsMaxMemoryBytes: 104857600,
+    internalQueryFrameworkControl: 'trySbeRestricted',
+    internalQueryPlannerIgnoreIndexWithCollationForRegex: 1
+  },
+  ok: 1
+}
+clgdbs> db.teacherinfo.createIndex({name:1})
+name_1
+clgdbs> db.teacherinfo.find({name:"Snehal"}).explain('executionStats')
+{
+  explainVersion: '1',
+  queryPlanner: {
+    namespace: 'clgdbs.teacherinfo',
+    parsedQuery: { name: { '$eq': 'Snehal' } },
+    indexFilterSet: false,
+    planCacheShapeHash: '544F3E5C',
+    planCacheKey: 'EEE0759C',
+    optimizationTimeMillis: 0,
+    maxIndexedOrSolutionsReached: false,
+    maxIndexedAndSolutionsReached: false,
+    maxScansToExplodeReached: false,
+    prunedSimilarIndexes: false,
+    winningPlan: {
+      isCached: false,
+      stage: 'FETCH',
+      inputStage: {
+        stage: 'IXSCAN',
+        keyPattern: { name: 1 },
+        indexName: 'name_1',
+        isMultiKey: false,
+        multiKeyPaths: { name: [] },
+        isUnique: false,
+        isSparse: false,
+        isPartial: false,
+        indexVersion: 2,
+        direction: 'forward',
+        indexBounds: { name: [ '["Snehal", "Snehal"]' ] }
+      }
+    },
+    rejectedPlans: []
+  },
+  executionStats: {
+    executionSuccess: true,
+    nReturned: 1,
+    executionTimeMillis: 86,
+    totalKeysExamined: 1,
+    totalDocsExamined: 1,
+    executionStages: {
+      isCached: false,
+      stage: 'FETCH',
+      nReturned: 1,
+      executionTimeMillisEstimate: 41,
+      works: 2,
+      advanced: 1,
+      needTime: 0,
+      needYield: 0,
+      saveState: 1,
+      restoreState: 1,
+      isEOF: 1,
+      docsExamined: 1,
+      alreadyHasObj: 0,
+      inputStage: {
+        stage: 'IXSCAN',
+        nReturned: 1,
+        executionTimeMillisEstimate: 41,
+        works: 2,
+        advanced: 1,
+        needTime: 0,
+        needYield: 0,
+        saveState: 1,
+        restoreState: 1,
+        isEOF: 1,
+        keyPattern: { name: 1 },
+        indexName: 'name_1',
+        isMultiKey: false,
+        multiKeyPaths: { name: [] },
+        isUnique: false,
+        isSparse: false,
+        isPartial: false,
+        indexVersion: 2,
+        direction: 'forward',
+        indexBounds: { name: [ '["Snehal", "Snehal"]' ] },
+        keysExamined: 1,
+        seeks: 1,
+        dupsTested: 0,
+        dupsDropped: 0
+      }
+    }
+  },
+  queryShapeHash: '2EFD0D11BCF1E186FEC3A98866F0654E1422875729CCE54F7D693C5AEBC29E68',
+  command: { find: 'teacherinfo', filter: { name: 'Snehal' }, '$db': 'clgdbs' },
+  serverInfo: {
+    host: 'DESKTOP-C06E7JV',
+    port: 27017,
+    version: '8.0.4',
+    gitVersion: 'bc35ab4305d9920d9d0491c1c9ef9b72383d31f9'
+  },
+  serverParameters: {
+    internalQueryFacetBufferSizeBytes: 104857600,
+    internalQueryFacetMaxOutputDocSizeBytes: 104857600,
+    internalLookupStageIntermediateDocumentMaxSizeBytes: 104857600,
+    internalDocumentSourceGroupMaxMemoryBytes: 104857600,
+    internalQueryMaxBlockingSortMemoryUsageBytes: 104857600,
+    internalQueryProhibitBlockingMergeOnMongoS: 0,
+    internalQueryMaxAddToSetBytes: 104857600,
+    internalDocumentSourceSetWindowFieldsMaxMemoryBytes: 104857600,
+    internalQueryFrameworkControl: 'trySbeRestricted',
+    internalQueryPlannerIgnoreIndexWithCollationForRegex: 1
+  },
+  ok: 1
+}
+clgdbs> db.teacherinfo.getIndexes()
+[
+  { v: 2, key: { _id: 1 }, name: '_id_' },
+  { v: 2, key: { name: 1 }, name: 'name_1' }
+]
